@@ -1,12 +1,12 @@
 from flask import request, make_response
 from .common import ViewObject
-from ..services import SearchSvc, UpdateSvc
+from ..services import SearchService, UpdateService
 import json
 
 class SearchView(ViewObject):
 
-    __search_svc__ = SearchSvc()
-    __update_svc__ = UpdateSvc()
+    _search_svc = SearchService()
+    _update_svc = UpdateService()
 
     def __init__(self):
         super().__init__("search", __name__, "/")
@@ -18,8 +18,8 @@ class SearchView(ViewObject):
                 # request.args.get("name")
                 region = "kr"
                 name = "여자맨"
-                self.__update_svc__.update(region, name=name)
-                result = self.__search_svc__.search(region, name)
+                self._update_svc.update(region=region, name=name, start=0, count=3)
+                result = self._search_svc.search(region, name, 0, 3)
                 result = json.dumps(result, ensure_ascii=False)
                 res = make_response(result)
 

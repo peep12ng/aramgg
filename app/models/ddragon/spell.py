@@ -6,10 +6,3 @@ class SpellModel(db.Model):
     key = db.Column(db.VARCHAR(5))
     name = db.Column(db.VARCHAR(20))
     image = db.Column(db.JSON)
-
-    def __init__(self, **kwargs):
-        self.id = kwargs.get("id", None)
-        self.version_id = kwargs.get("version_id", None)
-        self.key = kwargs.get("key", None)
-        self.name = kwargs.get("name", None)
-        self.image = kwargs.get("image", dict)

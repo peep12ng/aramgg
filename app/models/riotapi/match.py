@@ -13,23 +13,6 @@ class MatchModel(db.Model):
     _participant = db.relationship("ParticipantModel", backref="match_model")
     _team = db.relationship("TeamModel", backref="match_model")
 
-    def __init__(self, **kwargs):
-        self.id = kwargs.get("id", None)
-        self.version_id = kwargs.get("version_id", None)
-        self.continent = kwargs.get("continent", None)
-        self.creation = kwargs.get("creation", None)
-        self.duration = kwargs.get("duration", None)
-        self.start = kwargs.get("start", None)
-        self.end = kwargs.get("end", None)
-        self.endedEarlySurrender = kwargs.get("endedEarlySurrender", None)
-    
-    def serialize(self):
-        result = {}
-        for c in self.__table__.columns.keys():
-            result[c] = getattr(self, c)
-        
-        return result
-
 class TeamModel(db.Model):
     id = db.Column(db.VARCHAR(30), primary_key=True)
     match_id = db.Column(db.VARCHAR(30), db.ForeignKey("match_model.id"))
@@ -47,18 +30,6 @@ class TeamModel(db.Model):
     gold_earned = db.Column(db.INTEGER)
     gold_spent = db.Column(db.INTEGER)
     time_CCing = db.Column(db.INTEGER)
-
-    def __init__(self, **kwargs):
-        columns = self.__table__.columns
-        for k in columns.keys():
-            setattr(self, k, kwargs.get(k))
-
-    def serialize(self):
-        result = {}
-        for c in self.__table__.columns.keys():
-            result[c] = getattr(self, c)
-        
-        return result
 
 class ParticipantModel(db.Model):
     id = db.Column(db.VARCHAR(30), primary_key=True)
@@ -141,15 +112,3 @@ class ParticipantModel(db.Model):
     longest_time_spent_living = db.Column(db.INTEGER)
     total_time_spent_dead = db.Column(db.INTEGER)
     challenges = db.Column(db.JSON)
-
-    def __init__(self, **kwargs):
-        columns = self.__table__.columns
-        for k in columns.keys():
-            setattr(self, k, kwargs.get(k))
-
-    def serialize(self):
-        result = {}
-        for c in self.__table__.columns.keys():
-            result[c] = getattr(self, c)
-        
-        return result

@@ -12,7 +12,7 @@ class StyleModel(db.Model):
         self.version_id = kwargs.get("version_id", None)
         self.key = kwargs.get("key", None)
         self.name = kwargs.get("name", None)
-        self.icon = f"/img/icon/perk/style/{self.id}"
+        self.icon = f"/img/icon/perk/style/{self.key}"
 
 class RuneModel(db.Model):
     id = db.Column(db.VARCHAR(20), primary_key=True)
@@ -30,7 +30,7 @@ class RuneModel(db.Model):
         self.name = kwargs.get("name", None)
         self.shortDesc = kwargs.get("shortDesc", None)
         self.longDesc = kwargs.get("longDesc", None)
-        self.icon = f"/img/icon/perk/rune/{self.id}"
+        self.icon = f"/img/icon/perk/rune/{self.key}"
 
 class ShardModel(db.Model):
     id = db.Column(db.VARCHAR(20), primary_key=True)
@@ -48,4 +48,4 @@ class ShardModel(db.Model):
         self.name = kwargs.get("name", None)
         self.shortDesc = kwargs.get("shortDesc", None)
         self.longDesc = kwargs.get("longDesc", None)
-        self.icon = f"/img/icon/perk/shard/{self.id}"
+        self.icon = f"/img/icon/perk/shard/{self.key}"

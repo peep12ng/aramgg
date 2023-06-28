@@ -1,89 +1,83 @@
-from ..extensions import db
-from sqlalchemy.inspection import inspect
+from ..extensions import db, ModelObject
 
 class RepoObject:
     __session__ = db.session
-    __model__ = None
+    __model__: ModelObject = None
     __updates__ = []
+    _query = None
 
+    @property
+    def create_query(self):
+        self._query = self.__model__.query
+        return self
+
+    def all(self):
+        return self._query.all()
+    
+    def first(self) -> ModelObject:
+        return self._query.first()
+    
+    def new(self, **kwargs:dict) -> ModelObject:
+        return self.__model__(**kwargs)
+    
     def save(self):
         self.__session__.commit()
         self.__session__.close()
     
-    def all(self):
-        return self.__model__.query.all()
+    def delete(self, id):
+        obj = self.get(id)
+        self.__session__.delete(obj)
+        self.save()
+
+    def update(self, obj:ModelObject):
+        pk = obj.pk_value
+        self.create_query.find(**{obj.pk_name:pk})._update(obj)
+        self.save()
+
+        return self.get(pk)
     
-    def _first(self, query):
-        return query.first()
+    def _update(self, obj:ModelObject):
+        self._query.update({k:getattr(obj, k) for k in obj.update_only})
     
-    def _all(self, query):
-        return query.all()
+    def find(self, **kwargs):
+        self._query = self._query.filter_by(**kwargs)
+        return self
     
-    def _find(self, **kwargs):
-        return self.__model__.query.filter_by(**kwargs)
+    def select(self, columns:list[str]):
+        self._query = self._query.with_entities(*[getattr(self.__model__, column) for column in columns])
+        return self
     
-    def _slice(self, query, start, count):
-        return query.slice(start, count)
-    
-    def _select(self, query, columns):
-        return query.with_entities(*[getattr(self.__model__, column) for column in columns])
+    def slice(self, start, count):
+        self._query = self._query.slice(start, count)
+        return self
     
     def all_ids(self):
         ids = self.__model__.query.with_entities(getattr(self.__model__, self._pk_name)).all()
         return [id[0] for id in ids]
     
-    def get(self, id):
+    def get(self, id) -> ModelObject:
         return self.__model__.query.get(id)
     
-    def find(self, **kwargs):
-        return self._all(self._find(**kwargs))
+    def exists(self, id) -> bool:
+        return bool(self.get(id))
     
     def find_n(self, start, count, **kwargs):
         return self._find(**kwargs).paginate(page=start, per_page=count).all()
     
-    def first(self, **kwargs):
-        return self._find(**kwargs).first()
-    
-    def new(self, **kwargs):
-        return self.__model__(**kwargs)
-
-    def insert(self, obj):
+    def insert(self, obj:ModelObject):
         self.__session__.add(obj)
+        pk = obj.pk_value
         self.save()
 
-        return obj
-    
-    def updates_to_dict(self, obj):
-        d = {}
-        for c in self.__updates__:
-            d[c] = getattr(obj, c)
-        
-        return d
-    
-    def update(self, obj):
-        pk = self.get_pk(obj)
-        d = self.updates_to_dict(obj)
-
-        self.__model__.query.filter(getattr(self.__model__, self._pk_name)==pk).update(d)
-        self.save()
         return self.get(pk)
     
-    def delete(self, obj):
-        self.__session__.delete(obj)
+    def delete(self, id):
+        value = self.get(id)
+        self.__session__.delete(value)
         self.save()
     
-    def exists(self, id):
-        if self.get(id):
-            return True
-        else:
-            return False
-        
-    def get_pk(self, obj):
-        return getattr(obj, self._pk_name)
-    
-    @property
-    def _pk_name(self):
-        return inspect(self.__model__).primary_key[0].name
+    def get_pk_value(self, obj:ModelObject) -> str:
+        return getattr(obj, self.pk_name)
     
     @property
     def zeros(self):
@@ -99,3 +93,7 @@ class RepoObject:
                 d[k] = None
 
         return d
+
+    @property
+    def pk_name(self):
+        return self.__model__.pk_name

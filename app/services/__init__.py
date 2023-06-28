@@ -1,2 +1,2 @@
-from .search import SearchSvc
-from .update import UpdateSvc
+from .search import SearchService
+from .update import UpdateService

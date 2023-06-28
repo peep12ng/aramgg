@@ -1,38 +1,27 @@
-from .summoner import SummonerSvc
-from .match import MatchSvc
-from .ddragon import DdragonSvc
+from .riotapi import RiotAPIService
+from .ddragon import DdragonService
 import poro
 
-from ..utils import version_to_id, match_version_to_version
+from sqlalchemy.inspection import inspect
 
-class UpdateSvc:
-    __summoner_svc__ = SummonerSvc()
-    __match_svc__ = MatchSvc()
-    __ddragon_svc__ = DdragonSvc()
+class UpdateService:
 
-    def update(self, region, puuid:str=None, name:str=None):
-        summoner = poro.Summoner(region, puuid, name)
-        self.update_summoner(summoner)
+    _riotapi_svc = RiotAPIService()
+    _ddragon_svc = DdragonService()
 
-        history = summoner.match_history(0, 5).match_ids
-        all_ids = self.__match_svc__.get_all_match_ids()
+    def update(self, region:str, puuid:str=None, name:str=None, start:int=None, count:int=None):
+        summoner = self.update_summoner(region, puuid, name)
+        puuid = summoner.puuid
 
-        match_ids = list(set(history) - set(all_ids))
+        history = poro.MatchHistory(poro.Region(region.upper()).continent, puuid, start, count)
+        
+        match_ids = self._riotapi_svc.drop_duplicate_match_ids(history.match_ids, puuid)
 
         for m_id in match_ids:
-            _match = poro.Match(region, id=m_id)
-            version = match_version_to_version(_match.version)
-
-            if self.__ddragon_svc__.exists_ddragon(version)==False:
-                self.__ddragon_svc__.add_ddragon(version)
-            
-            if self.__match_svc__.exists_match(_match.id)==False:
-                match = _match.to_dict()
-                match["version_id"] = version_to_id(version)
-                self.__match_svc__.add_match(match)
-
-    def update_summoner(self, summoner:poro.Summoner):
-        if self.__summoner_svc__.exists_summoner(summoner.puuid):
-            return self.__summoner_svc__.update_summoner(summoner.to_dict())
-        else:
-            return self.__summoner_svc__.add_summoner(summoner.to_dict())
+            match = poro.Match(region=region, id=m_id)
+            self._ddragon_svc.update_ddragon(match.version)
+            self._riotapi_svc.add_match(match)
+    
+    def update_summoner(self, region:str, puuid:str=None, name:str=None):
+        summoner = poro.Summoner(region, puuid, name)
+        return self._riotapi_svc.update_summoner(summoner)

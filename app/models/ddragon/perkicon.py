@@ -7,10 +7,3 @@ class PerkiconModel(db.Model):
     key = db.Column(db.VARCHAR(10))
     binary = db.Column(MEDIUMBLOB)
     path = db.Column(db.VARCHAR(30))
-
-    def __init__(self, **kwargs):
-        self.id = kwargs.get("id", None)
-        self.version_id = kwargs.get("version_id", None)
-        self.key = kwargs.get("key", None)
-        self.binary = kwargs.get("binary", bytes)
-        self.path = f"/img/perkicon/{self.key}"

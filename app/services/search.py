@@ -1,20 +1,23 @@
-from .summoner import SummonerSvc
-from .match import MatchSvc
+from .riotapi import RiotAPIService
 
-class SearchSvc:
-    __summoner_svc__ = SummonerSvc()
-    __match_svc__ = MatchSvc()
+class SearchService:
 
-    def search(self, region, name):
-        summoner = self.__summoner_svc__.get_summoner(region=region, name=name)
+    _riotapi_svc = RiotAPIService()
 
-        match_ids = self.__match_svc__.get_match_ids(summoner['puuid'], 0, 3)
+    def search(self, region:str, name:str, start:int, count:int):
+        summoner = self._riotapi_svc.get_summoner(region=region, name=name)
+        match_ids = self._riotapi_svc.get_match_ids(summoner["puuid"], start, count)
 
         result = {
             "summoner":summoner,
-            "matches":{m_id:{"match":self.__match_svc__.get_match(m_id),
-                             "teams":self.__match_svc__.get_teams(m_id),
-                             "participants":self.__match_svc__.get_participants(m_id)} for m_id in match_ids}
+            "history":
+            {m_id:
+                {
+                    "match":self._riotapi_svc.get_match(m_id),
+                    "teams":self._riotapi_svc.get_teams(m_id),
+                    "participants":self._riotapi_svc.get_participants(m_id)
+                }
+                for m_id in match_ids}
         }
 
         return result

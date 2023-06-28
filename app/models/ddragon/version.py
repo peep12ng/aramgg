@@ -16,9 +16,3 @@ class VersionModel(db.Model):
     _sprite = db.relationship('SpriteModel', backref='version_model')
     _profileicon = db.relationship('ProfileiconModel', backref='version_model')
     _perkicon = db.relationship('PerkiconModel', backref='version_model')
-
-    def __init__(self, **kwargs):
-        self.id = kwargs.get("id", None)
-        self.version = kwargs.get("version", None)
-        self.season = kwargs.get("season", None)
-        self.count = kwargs.get("count")
