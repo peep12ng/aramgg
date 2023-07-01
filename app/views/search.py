@@ -17,7 +17,7 @@ class SearchView(ViewObject):
             if request.method=="GET":
                 # request.args.get("name")
                 region = "kr"
-                name = "여자맨"
+                name = "때리는걸잘해요"
                 self._update_svc.update(region=region, name=name, start=0, count=3)
                 result = self._search_svc.search(region, name, 0, 3)
                 result = json.dumps(result, ensure_ascii=False)

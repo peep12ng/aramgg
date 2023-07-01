@@ -2,8 +2,6 @@ from .riotapi import RiotAPIService
 from .ddragon import DdragonService
 import poro
 
-from sqlalchemy.inspection import inspect
-
 class UpdateService:
 
     _riotapi_svc = RiotAPIService()

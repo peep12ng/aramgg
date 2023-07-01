@@ -26,11 +26,8 @@ class RiotAPIService:
     
     def add_match(self, match:poro.Match):
         self._match_svc.add(match)
-        print("match", len(match.participants))
         self._team_svc.add(match)
-        print("team", len(match.participants))
         self._participant_svc.add(match)
-        print("participant", len(match.participants))
 
         print(f"Add Match id {match.id}")
     
@@ -38,7 +35,8 @@ class RiotAPIService:
         return self._summoner_svc.get(region=region, name=name).serialize()
     
     def get_match_ids(self, puuid:str, start:int, count:int) -> list[str]:
-        return self._participant_svc.get_match_ids(puuid, start, count)
+        _match_ids = self._participant_svc.get_match_ids(puuid, start, count)
+        return self._match_svc.sort_match_ids(_match_ids)
 
     def get_match(self, match_id:str) -> dict:
         return self._match_svc._read(match_id).serialize()

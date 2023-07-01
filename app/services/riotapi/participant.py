@@ -29,16 +29,16 @@ class ParticipantService(ServiceObject):
                 _participant[k] = _p[k]
             
             participant = self.__repo__.new(**_participant)
-            print(participant.id)
             participants.append(participant)
         
         return participants
     
     def get_match_ids(self, puuid:str, start:int=None, count:int=None) -> list[str]:
+        _query = self.__repo__.create_query.find(puuid=puuid).select(["match_id"])
         if start==None:
-            _match_ids = self.__repo__.create_query.find(puuid=puuid).select(["match_id"]).all()
+            _match_ids = _query.all()
         else:
-            _match_ids = self.__repo__.create_query.find(puuid=puuid).select(["match_id"]).slice(start, count).all()
+            _match_ids = _query.all()
         return [m_id[0] for m_id in _match_ids]
     
     def get_participants(self, match_id:str) -> list[ParticipantModel]:

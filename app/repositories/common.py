@@ -19,6 +19,16 @@ class RepoObject:
     
     def new(self, **kwargs:dict) -> ModelObject:
         return self.__model__(**kwargs)
+
+    def get(self, id) -> ModelObject:
+        return self.__model__.query.get(id)
+    
+    def insert(self, obj:ModelObject):
+        self.__session__.add(obj)
+        pk = obj.pk_value
+        self.save()
+
+        return self.get(pk)
     
     def save(self):
         self.__session__.commit()
@@ -51,33 +61,16 @@ class RepoObject:
         self._query = self._query.slice(start, count)
         return self
     
-    def all_ids(self):
-        ids = self.__model__.query.with_entities(getattr(self.__model__, self._pk_name)).all()
-        return [id[0] for id in ids]
-    
-    def get(self, id) -> ModelObject:
-        return self.__model__.query.get(id)
-    
     def exists(self, id) -> bool:
         return bool(self.get(id))
     
-    def find_n(self, start, count, **kwargs):
-        return self._find(**kwargs).paginate(page=start, per_page=count).all()
+    def order_by(self, columns:list[str]):
+        self._query = self._query.order_by(*[getattr(self.__model__, column) for column in columns])
+        return self
     
-    def insert(self, obj:ModelObject):
-        self.__session__.add(obj)
-        pk = obj.pk_value
-        self.save()
-
-        return self.get(pk)
-    
-    def delete(self, id):
-        value = self.get(id)
-        self.__session__.delete(value)
-        self.save()
-    
-    def get_pk_value(self, obj:ModelObject) -> str:
-        return getattr(obj, self.pk_name)
+    def filter_in(self, column, values:list):
+        self._query = self._query.filter(getattr(self.__model__, column).in_(values))
+        return self
     
     @property
     def zeros(self):
@@ -93,7 +86,3 @@ class RepoObject:
                 d[k] = None
 
         return d
-
-    @property
-    def pk_name(self):
-        return self.__model__.pk_name
