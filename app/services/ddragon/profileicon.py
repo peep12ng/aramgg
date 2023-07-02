@@ -7,8 +7,7 @@ class ProfileiconService(ServiceObject):
 
     _repo_type = ProfileiconRepo
     
-    def add(self, version:str):
-        profileicons = poro.ProfileIcons(version)
+    def add(self, profileicons):
         _profileicons = self._new(profileicons)
         
         for _p in _profileicons:

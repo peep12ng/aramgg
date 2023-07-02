@@ -7,8 +7,7 @@ class ShardService(ServiceObject):
 
     _repo_type = ShardRepo
 
-    def add(self, version:str):
-        perks = poro.Perks(version)
+    def add(self, perks):
         _shards = self._new(perks)
         
         for _s in _shards:

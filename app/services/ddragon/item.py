@@ -7,8 +7,7 @@ class ItemService(ServiceObject):
 
     _repo_type = ItemRepo
     
-    def add(self, version:str):
-        items = poro.Items(version)
+    def add(self, items):
         _items = self._new(items)
         
         for _i in _items:

@@ -7,8 +7,7 @@ class ChampionService(ServiceObject):
 
     _repo_type = ChampionRepo
     
-    def add(self, version:str):
-        champions = poro.Champions(version)
+    def add(self, champions):
         _champions = self._new(champions)
         
         for _c in _champions:

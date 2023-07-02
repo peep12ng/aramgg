@@ -7,8 +7,7 @@ class SpellService(ServiceObject):
 
     _repo_type = SpellRepo
 
-    def add(self, version:str):
-        spells = poro.Spells(version)
+    def add(self, spells):
         _spells = self._new(spells)
         
         for _s in _spells:

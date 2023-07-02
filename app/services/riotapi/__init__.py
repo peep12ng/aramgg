@@ -4,7 +4,7 @@ from .match import MatchService
 from .team import TeamService
 from .participant import ParticipantService
 
-import poro
+from ...extensions import aramgg_poro as poro
 
 class RiotAPIService:
         

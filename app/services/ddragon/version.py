@@ -1,7 +1,6 @@
 from ..common import ServiceObject
 from ...models import VersionModel
 from ...repositories import VersionRepo
-import poro
 
 from ...utils import version_to_id
 

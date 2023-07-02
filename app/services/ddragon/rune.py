@@ -7,8 +7,7 @@ class RuneService(ServiceObject):
 
     _repo_type = RuneRepo
 
-    def add(self, version:str):
-        perks = poro.Perks(version)
+    def add(self, perks):
         _runes = self._new(perks)
         
         for _r in _runes:

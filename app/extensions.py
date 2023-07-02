@@ -6,9 +6,6 @@ from sqlalchemy.inspection import inspect
 
 from typing import Tuple
 
-# def my_declarative_constructor(self, **kwargs):
-#     orm.decl_base._declarative_constructor(self, **kwargs)
-
 def my_declarative_constructor(self, **kwargs):
     cls_ = type(self)
     for k in kwargs:
@@ -69,3 +66,5 @@ migrate = Migrate()
 #  -> 이러면 하나의 서비스라고 봐도 무방 ㅇㅇ
 #  -> 문제점:continent, match_history
 #  -> 이러나 저러나 columns따라 반복문 돌리는건 매한가지??
+
+import poro as aramgg_poro

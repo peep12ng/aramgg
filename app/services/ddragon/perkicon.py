@@ -7,8 +7,7 @@ class PerkiconService(ServiceObject):
 
     _repo_type = PerkiconRepo
     
-    def add(self, version:str):
-        perkicons = poro.PerkIcons(version)
+    def add(self, perkicons):
         _perkicons = self._new(perkicons)
         
         for _p in _perkicons:

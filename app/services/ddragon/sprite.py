@@ -7,8 +7,7 @@ class SpriteService(ServiceObject):
 
     _repo_type = SpriteRepo
     
-    def add(self, version:str):
-        sprites = poro.Sprites(version)
+    def add(self, sprites):
         _sprites = self._new(sprites)
         
         for _s in _sprites:

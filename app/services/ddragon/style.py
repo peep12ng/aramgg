@@ -7,8 +7,7 @@ class StyleService(ServiceObject):
 
     _repo_type = StyleRepo
 
-    def add(self, version:str):
-        perks = poro.Perks(version)
+    def add(self, perks):
         _styles = self._new(perks)
         
         for _s in _styles:

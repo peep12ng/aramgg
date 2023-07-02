@@ -1,6 +1,6 @@
 from .riotapi import RiotAPIService
 from .ddragon import DdragonService
-import poro
+from ..extensions import aramgg_poro as poro
 
 class UpdateService:
 
