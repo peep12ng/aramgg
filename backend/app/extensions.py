@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-<<<<<<< HEAD
 from flask_sqlalchemy.model import Model, DefaultMeta
 from flask_migrate import Migrate
 from sqlalchemy import orm
@@ -69,9 +68,3 @@ migrate = Migrate()
 #  -> 이러나 저러나 columns따라 반복문 돌리는건 매한가지??
 
 import poro as aramgg_poro
-=======
-from flask_migrate import Migrate
-
-db = SQLAlchemy()
-migrate = Migrate()
->>>>>>> 2928438d227251a39a2458437d412dd3c63f2acf
