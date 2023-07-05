@@ -1,5 +1,7 @@
 FROM node
 WORKDIR /frontend
-ADD . ./
-CMD npm install && npm run serve
+COPY package.json .
+ADD . .
+RUN npm install
 EXPOSE 8080
+CMD ["npm", "run", "serve"]

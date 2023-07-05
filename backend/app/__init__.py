@@ -36,6 +36,4 @@ def configure_blueprints(app, blueprints):
         app.register_blueprint(blueprint)
 
 def configure_env():
-    project_folder = os.path.expanduser("~/aramgg")
-    load_dotenv(os.path.join(project_folder, ".env"))
     aramgg_poro.set_riot_api_key(os.getenv("RIOT_API_KEY"))
