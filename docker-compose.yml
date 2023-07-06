@@ -20,7 +20,14 @@ services:
       dockerfile: back.dev.Dockerfile
     expose:
       - 5000
-    ports:
-      - "5000:5000"
     volumes:
       - ./backend:/www
+  
+  nginx:
+    build:
+      context: nginx
+      dockerfile: nginx.dev.Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
