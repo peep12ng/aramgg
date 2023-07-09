@@ -16,6 +16,8 @@ services:
 
   backend:
     container_name: backend
+    env_file:
+      - .env
     build:
       context: backend
       dockerfile: back.dev.Dockerfile
@@ -33,8 +35,6 @@ services:
       dockerfile: front.dev.Dockerfile
     expose:
       - 8080
-    ports:
-      - "8080:8080"
     volumes:
       - ./frontend:/app
     depends_on:

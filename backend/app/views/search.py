@@ -12,7 +12,7 @@ class SearchView(ViewObject):
         super().__init__("search", __name__, "/")
         bp = self.bp
 
-        @bp.route("/search", methods=["GET"])
+        @bp.route("/api/search", methods=["GET"])
         def search():
             if request.method=="GET":
                 # request.args.get("name")
@@ -24,3 +24,7 @@ class SearchView(ViewObject):
                 res = make_response(result)
 
                 return res
+            
+        @bp.route("/api/hello")
+        def hello():
+            return "hello"
