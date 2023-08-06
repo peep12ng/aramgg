@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: db
+    environment:
+      MYSQL_DATABASE: aramgg
+      MYSQL_ROOT_PASSWORD: "7120"
+    build:
+      context: db
+      dockerfile: db.dev.Dockerfile
+    volumes:
+      - db_volume:/var/lib/mysql
+    command:
+      - --character-set-server=utf8
+      - --collation-server=utf8_unicode_ci
+
+  backend:
+    container_name: backend
+    env_file: .env
+    build:
+      context: backend
+      dockerfile: back.dev.Dockerfile
+    expose:
+      - 5000
+    volumes:
+      - ./backend:/www
+    depends_on:
+      - db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: frontend
+      dockerfile: front.dev.Dockerfile
+    expose:
+      - 8080
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: nginx.dev.Dockerfile
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+  
+volumes:
+  db_volume:

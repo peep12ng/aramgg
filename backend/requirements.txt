@@ -1,0 +1,11 @@
+aramgg-poro==0.0.7
+Flask==2.3.2
+Flask-Cors==4.0.0
+Flask-Migrate==4.0.4
+Flask-SQLAlchemy==3.0.5
+Pillow==10.0.0
+PyMySQL==1.1.0
+python-dotenv==1.0.0
+requests==2.31.0
+uwsgi==2.0.20
+cryptography
