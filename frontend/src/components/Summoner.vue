@@ -597,8 +597,8 @@ export default {
             },
         })
         .then( response =>{
-            this.matches = response.data;
-            console.log(response.data);
+            this.matches = response.data.history;
+            console.log(this.matches);
             this.summonerMatchFilter();
         })
         .catch( error => {
